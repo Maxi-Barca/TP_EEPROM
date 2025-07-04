@@ -91,12 +91,11 @@ void loop() {
           {
             Serial.println("espera1");
             millis_actual2 = millis();
-            if (millis_actual2 - millis_boton >= 5000) {
+            if (millis_actual2 - millis_boton >= 5000 && digitalRead(BOTON1) == HIGH) {
               Serial.println("5 seg");
-              millis_boton = millis_actual2;
               estado = P2;
             }
-            if (digitalRead(BOTON1) == HIGH) {
+            if (millis_actual2 - millis_boton < 5000 && digitalRead(BOTON1) == HIGH) {
               millis_boton = millis_actual2;
               Serial.println("vuelve p1");
               estado = P1;
@@ -106,6 +105,7 @@ void loop() {
           break;
         case P2:
           {
+            millis_boton = millis_actual2;
             millis_actual2 = millis();
             printBMP_OLED2();
             if (digitalRead(BOTON1) == LOW) {
@@ -126,17 +126,14 @@ void loop() {
             millis_actual2 = millis();
             if (millis_actual2 - millis_boton >= 5000) {
               Serial.println("va a p1");
+              preferences.begin("config", false);
+              preferences.putInt("valorU", valorU);
+              preferences.end();
               millis_boton = millis_actual2;
               estado = P1;
             }
             if (digitalRead(BOTON2) == HIGH) {
               valorU = valorU - 1;
-              preferences.begin("config", false);
-              preferences.putInt("valorU", valorU);
-              preferences.end();
-
-              Serial.print("Nuevo valorU guardado: ");
-              Serial.println(valorU);
               millis_boton = millis_actual2;
               estado = P2;
             }
@@ -148,13 +145,6 @@ void loop() {
             
             if (digitalRead(BOTON1) == HIGH) {
               valorU = valorU + 1;
-              preferences.begin("config", false);
-              preferences.putInt("valorU", valorU);
-              preferences.end();
-
-              Serial.print("Nuevo valorU guardado: ");
-              Serial.println(valorU);
-
                estado = P2;
             }
 
@@ -191,3 +181,4 @@ void printBMP_OLED2(void) {
   u8g2.drawStr(75, 50, "°C");
   u8g2.sendBuffer();          // transfer internal memory to the display
 }
+//11-6200-5317

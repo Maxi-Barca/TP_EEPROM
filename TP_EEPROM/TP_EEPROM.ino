@@ -112,9 +112,6 @@ void loop() {
               estado = AUMENTAR;
             }
             if (digitalRead(BOTON2) == LOW) {
-              estado = RESTAR;
-            }
-            if (digitalRead(BOTON2) == LOW) {
               millis_boton = millis_actual2;
               estado = ESPERA2;
             }
